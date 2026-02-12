@@ -4,10 +4,16 @@ const { inventory } = db;
 // Create inventory item
 exports.createInventoryItem = async (req, res) => {
     try {
+
+
         const userId = req.user.id;
         const data = await inventory.create({ ...req.body, userId });
         res.status(201).json({ status: true, data, message: "Inventory item created successfully" });
     } catch (error) {
+        console.error("Error creating inventory item:", error);
+        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({ status: false, message: error.errors.map(e => e.message).join(', ') });
+        }
         res.status(500).json({ status: false, message: error.message });
     }
 };

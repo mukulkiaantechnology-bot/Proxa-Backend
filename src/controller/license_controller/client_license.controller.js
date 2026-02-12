@@ -4,13 +4,6 @@ const { client_license, client_license_assignment, department, user } = db;
 // Create a new client license
 exports.createClientLicense = async (req, res) => {
     try {
-        console.log("createClientLicense called. Body:", req.body);
-        console.log("User:", req.user);
-
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({ status: false, message: "User not authenticated or ID missing" });
-        }
-
         const userId = req.user.id;
         const data = await client_license.create({ ...req.body, userId });
         res.status(201).json({ status: true, data, message: "Client license created successfully" });
